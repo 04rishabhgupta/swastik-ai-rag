@@ -6,9 +6,7 @@ import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import { useChatRuntime } from "@assistant-ui/react-ai-sdk";
 
 export default function Home() {
-  const chat = useChat({
-    api: "/api/chat",
-  });
+  const chat = useChat();
   
   const runtime = useChatRuntime(chat);
 
