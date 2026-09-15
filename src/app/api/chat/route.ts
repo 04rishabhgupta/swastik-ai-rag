@@ -1,11 +1,14 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { streamText } from 'ai';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const openai = createOpenAI({
+const nvidia = createOpenAICompatible({
+  name: 'nvidia',
   baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY,
+  headers: {
+    Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
+  },
 });
 
 export async function POST(req: Request) {
@@ -25,13 +28,20 @@ Keep your responses concise and professional.
 Context:
 ${contextStr}`;
 
+    const coreMessages = messages.map((msg: any) => ({
+      role: msg.role,
+      content: msg.content || (msg.parts ? msg.parts.map((p: any) => p.text).join('') : '')
+    }));
+    console.log('Sending messages:', JSON.stringify(coreMessages, null, 2));
+
     const result = streamText({
-      model: openai('nvidia/nemotron-4-340b-instruct'),
-      messages,
+      model: nvidia('meta/llama-3.2-11b-vision-instruct'),
+      messages: coreMessages,
       system: systemPrompt,
     });
 
-    return result.toTextStreamResponse();
+    console.log('Streaming response...');
+    return (result as any).toDataStreamResponse ? (result as any).toDataStreamResponse() : (result as any).toUIMessageStreamResponse();
   } catch (error: any) {
     console.error('Error in chat route:', error);
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
