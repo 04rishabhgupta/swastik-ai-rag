@@ -235,7 +235,11 @@ const ThreadWelcome: FC = () => {
   return (
     <div className="aui-thread-welcome-root flex flex-col items-center px-2 text-center">
       <BrandMark className="fade-in zoom-in-95 animate-in fill-mode-both shadow-elevated size-14 rounded-2xl duration-300" />
-      <h2 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both mt-5 text-2xl font-semibold tracking-tight text-balance delay-75 duration-300 sm:text-3xl">
+      <span className="fade-in animate-in fill-mode-both bg-card text-muted-foreground mt-5 inline-flex items-center gap-2 rounded-full border px-2.5 py-1 font-mono text-[10.5px] font-medium tracking-wider uppercase delay-50 duration-300">
+        <span className="bg-brand size-1.5 rounded-full" />
+        Swastik Medical Centre
+      </span>
+      <h2 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both mt-4 text-[1.75rem] leading-tight font-semibold text-balance delay-75 duration-300 sm:text-4xl">
         How can we help you today?
       </h2>
       <p className="fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground mt-2 max-w-md text-sm leading-relaxed text-pretty delay-100 duration-300 sm:text-[15px]">
@@ -284,9 +288,9 @@ const ThreadSuggestions: FC = () => {
             prompt={prompt}
             send
             style={{ animationDelay: `${150 + idx * 50}ms` }}
-            className="aui-thread-welcome-suggestion group fade-in slide-in-from-bottom-2 animate-in fill-mode-both bg-card hover:border-primary/30 hover:shadow-soft focus-visible:ring-ring/40 flex items-center gap-3 sm:items-start rounded-2xl border p-3 text-start transition-[border-color,box-shadow,transform] duration-300 outline-none focus-visible:ring-3 active:scale-[0.98] sm:p-3.5"
+            className="aui-thread-welcome-suggestion group fade-in slide-in-from-bottom-2 animate-in fill-mode-both bg-card hover:border-foreground/15 hover:shadow-soft focus-visible:ring-ring/40 flex items-center gap-3 sm:items-start rounded-2xl border p-3 text-start transition-[border-color,box-shadow,transform] duration-300 outline-none focus-visible:ring-3 active:scale-[0.98] sm:p-3.5"
           >
-            <span className="bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors">
+            <span className="bg-secondary text-brand group-hover:bg-brand group-hover:text-brand-foreground flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors">
               <Icon className="size-4" />
             </span>
             <span className="flex min-w-0 flex-col gap-0.5">
@@ -311,7 +315,7 @@ const Composer: FC<{ autoFocus: boolean }> = ({ autoFocus }) => {
         render={
           <div
             data-slot="aui_composer-shell"
-            className="shadow-elevated focus-within:border-primary/40 focus-within:ring-primary/10 data-[dragging=true]:border-ring dark:border-muted-foreground/15 dark:focus-within:border-muted-foreground/30 flex w-full cursor-text flex-col gap-1 rounded-(--composer-radius) border bg-(--composer-bg) p-(--composer-padding) ring-4 ring-transparent transition-[border-color,box-shadow] duration-200 data-[dragging=true]:border-dashed data-[dragging=true]:bg-[color-mix(in_oklab,var(--color-accent)_50%,var(--color-background))]"
+            className="shadow-elevated focus-within:border-foreground/20 focus-within:ring-foreground/5 data-[dragging=true]:border-ring dark:border-muted-foreground/15 dark:focus-within:border-muted-foreground/30 flex w-full cursor-text flex-col gap-1 rounded-(--composer-radius) border bg-(--composer-bg) p-(--composer-padding) ring-4 ring-transparent transition-[border-color,box-shadow] duration-200 data-[dragging=true]:border-dashed data-[dragging=true]:bg-[color-mix(in_oklab,var(--color-accent)_50%,var(--color-background))]"
           />
         }
       >
@@ -454,9 +458,9 @@ const AssistantMessage: FC = () => {
                     className="inline-flex h-6 items-center gap-1"
                     aria-label="Assistant is working"
                   >
-                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.3s] motion-reduce:animate-pulse" />
-                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.15s] motion-reduce:animate-pulse" />
-                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full motion-reduce:animate-pulse" />
+                    <span className="bg-muted-foreground/70 size-1.5 animate-bounce rounded-full [animation-delay:-0.3s] motion-reduce:animate-pulse" />
+                    <span className="bg-muted-foreground/70 size-1.5 animate-bounce rounded-full [animation-delay:-0.15s] motion-reduce:animate-pulse" />
+                    <span className="bg-muted-foreground/70 size-1.5 animate-bounce rounded-full motion-reduce:animate-pulse" />
                   </span>
                 );
               default:
@@ -566,7 +570,7 @@ const EditComposer: FC = () => {
       data-slot="aui_edit-composer-wrapper"
       className="flex flex-col [contain-intrinsic-size:auto_200px] [content-visibility:auto]"
     >
-      <ComposerPrimitive.Root className="aui-edit-composer-root shadow-soft focus-within:border-primary/40 dark:border-muted-foreground/15 ms-auto flex w-full max-w-[90%] cursor-text flex-col rounded-[1.25rem] border bg-(--composer-bg) transition-colors sm:max-w-[85%]">
+      <ComposerPrimitive.Root className="aui-edit-composer-root shadow-soft focus-within:border-foreground/20 dark:border-muted-foreground/15 ms-auto flex w-full max-w-[90%] cursor-text flex-col rounded-[1.25rem] border bg-(--composer-bg) transition-colors sm:max-w-[85%]">
         <ComposerPrimitive.Input
           className="aui-edit-composer-input text-foreground min-h-14 w-full resize-none bg-transparent px-4 pt-3 pb-1 text-base outline-none"
           autoFocus

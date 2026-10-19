@@ -13,15 +13,17 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-3 px-4 sm:h-16 sm:px-6">
         <BrandMark className="sm:size-10" />
         <div className="flex min-w-0 flex-1 flex-col">
-          <h1 className="text-primary truncate text-[15px] leading-tight font-semibold tracking-tight sm:text-base">
+          <h1 className="text-foreground truncate text-[15px] leading-tight font-semibold sm:text-base">
             Swastik Clinic Assistant
           </h1>
-          <p className="text-muted-foreground flex items-center gap-1.5 truncate text-xs">
+          <p className="text-muted-foreground mt-0.5 flex items-center gap-1.5 truncate text-xs">
             <span className="relative flex size-2 shrink-0">
               <span className="bg-success/60 absolute inline-flex size-full animate-ping rounded-full opacity-75 motion-reduce:hidden" />
               <span className="bg-success relative inline-flex size-2 rounded-full" />
             </span>
-            <span>Online</span>
+            <span className="font-mono text-[10.5px] font-medium tracking-wider uppercase">
+              Online
+            </span>
             <span aria-hidden="true" className="hidden sm:inline">
               ·
             </span>
