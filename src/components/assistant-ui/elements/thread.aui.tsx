@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ComposerAddAttachment,
   ComposerAttachments,
   UserMessageAttachments,
 } from "@/components/assistant-ui/elements/attachment.aui";
@@ -23,6 +22,7 @@ import {
   ToolGroupTrigger,
 } from "@/components/assistant-ui/elements/tool-group.aui";
 import { TooltipIconButton } from "@/components/assistant-ui/elements/tooltip-icon-button";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,6 @@ import {
   ErrorPrimitive,
   groupPartByType,
   MessagePrimitive,
-  SuggestionPrimitive,
   ThreadPrimitive,
   type FileMessagePartComponent,
   type ImageMessagePartComponent,
@@ -46,16 +45,20 @@ import {
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  CalendarCheckIcon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ClockIcon,
   CopyIcon,
   DownloadIcon,
+  IndianRupeeIcon,
   MicIcon,
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
   SquareIcon,
+  StethoscopeIcon,
 } from "lucide-react";
 import {
   createContext,
@@ -151,27 +154,29 @@ const ThreadRoot: FC<{ isEmpty: boolean; autoFocus: boolean }> = ({
 
   return (
     <ThreadPrimitive.Root
-      className="aui-root aui-thread-root bg-background @container flex h-full flex-col"
+      className="aui-root aui-thread-root @container flex min-h-0 flex-1 flex-col"
       style={{
-        ["--thread-max-width" as string]: "44rem",
+        ["--thread-max-width" as string]: "46rem",
         ["--composer-bg" as string]: "var(--color-card)",
-        ["--composer-radius" as string]: "1.5rem",
-        ["--composer-padding" as string]: "8px",
+        ["--composer-radius" as string]: "1.625rem",
+        ["--composer-padding" as string]: "6px",
       }}
     >
       <ThreadPrimitive.Viewport
         turnAnchor="top"
         data-slot="aui_thread-viewport"
-        className="relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth"
+        className="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto overscroll-contain scroll-smooth"
       >
         <div
           className={cn(
-            "mx-auto flex w-full max-w-(--thread-max-width) flex-1 flex-col px-4 pt-4",
-            isEmpty && "justify-center",
+            "mx-auto flex w-full max-w-(--thread-max-width) flex-1 flex-col px-4 pt-6 sm:px-6 sm:pt-8",
+            isEmpty && "md:justify-center",
           )}
         >
           <AuiIf condition={isNewChatView}>
-            <Welcome />
+            <div className="flex flex-1 flex-col justify-center md:flex-none">
+              <Welcome />
+            </div>
           </AuiIf>
           <AuiIf condition={isHistoryLoadingView}>
             <ThreadHistorySkeleton />
@@ -179,7 +184,7 @@ const ThreadRoot: FC<{ isEmpty: boolean; autoFocus: boolean }> = ({
 
           <div
             data-slot="aui_message-group"
-            className="mb-14 flex flex-col gap-y-6 empty:hidden"
+            className="mb-10 flex flex-col gap-y-7 empty:hidden"
           >
             <ThreadPrimitive.Messages>
               {() => <ThreadMessage />}
@@ -188,9 +193,8 @@ const ThreadRoot: FC<{ isEmpty: boolean; autoFocus: boolean }> = ({
 
           <ThreadPrimitive.ViewportFooter
             className={cn(
-              "aui-thread-viewport-footer bg-background flex flex-col gap-4 overflow-visible pb-4 md:pb-6",
-              !isEmpty &&
-                "sticky bottom-0 mt-auto rounded-t-(--composer-radius)",
+              "aui-thread-viewport-footer from-background via-background sticky bottom-0 mt-auto flex flex-col gap-3 overflow-visible bg-linear-to-t from-80% via-90% to-transparent pt-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] md:pb-5",
+              isEmpty && "md:static md:mt-0 md:bg-none md:pt-6",
             )}
           >
             <ThreadScrollToBottom />
@@ -199,6 +203,10 @@ const ThreadRoot: FC<{ isEmpty: boolean; autoFocus: boolean }> = ({
             <AuiIf condition={(s) => isNewChatView(s) && s.composer.isEmpty}>
               <ThreadSuggestions />
             </AuiIf>
+            <p className="text-muted-foreground/80 px-2 text-center text-[11px] leading-snug sm:text-xs">
+              AI responses may be inaccurate. Please confirm with the clinic. In
+              an emergency, call <span className="font-medium">112</span>.
+            </p>
           </ThreadPrimitive.ViewportFooter>
         </div>
       </ThreadPrimitive.Viewport>
@@ -219,34 +227,79 @@ const ThreadMessage: FC = () => {
 
 const ThreadScrollToBottom: FC = () => {
   return (
-    <ThreadPrimitive.ScrollToBottom render={<TooltipIconButton tooltip="Scroll to bottom" variant="outline" className="aui-thread-scroll-to-bottom dark:border-border dark:bg-background dark:hover:bg-accent absolute -top-12 z-10 self-center rounded-full p-4 disabled:invisible" />}><ArrowDownIcon /></ThreadPrimitive.ScrollToBottom>
+    <ThreadPrimitive.ScrollToBottom render={<TooltipIconButton tooltip="Scroll to bottom" variant="outline" className="aui-thread-scroll-to-bottom bg-card shadow-soft dark:border-border dark:hover:bg-accent absolute -top-8 z-10 size-9 self-center rounded-full p-0 disabled:invisible [&_svg]:size-4" />}><ArrowDownIcon /></ThreadPrimitive.ScrollToBottom>
   );
 };
 
 const ThreadWelcome: FC = () => {
   return (
-    <div className="aui-thread-welcome-root mb-6 flex flex-col items-center px-4 text-center">
-      <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-2xl font-medium tracking-tight duration-200">
-        How can I help you today?
-      </h1>
+    <div className="aui-thread-welcome-root flex flex-col items-center px-2 text-center">
+      <BrandMark className="fade-in zoom-in-95 animate-in fill-mode-both shadow-elevated size-14 rounded-2xl duration-300" />
+      <h2 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both mt-5 text-2xl font-semibold tracking-tight text-balance delay-75 duration-300 sm:text-3xl">
+        How can we help you today?
+      </h2>
+      <p className="fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground mt-2 max-w-md text-sm leading-relaxed text-pretty delay-100 duration-300 sm:text-[15px]">
+        Ask about our doctors, OPD timings, consultation fees, services or how
+        to book an appointment at Swastik Medical Centre.
+      </p>
     </div>
   );
 };
+
+const STARTER_SUGGESTIONS = [
+  {
+    icon: StethoscopeIcon,
+    title: "Doctors & specialities",
+    description: "Who consults at the clinic",
+    prompt:
+      "Which doctors are available at Swastik Clinic and what are their specialities?",
+  },
+  {
+    icon: ClockIcon,
+    title: "OPD timings",
+    description: "When each doctor is available",
+    prompt: "What are the OPD timings for each doctor?",
+  },
+  {
+    icon: IndianRupeeIcon,
+    title: "Consultation fees",
+    description: "Charges for each consultation",
+    prompt: "What are the consultation fees at Swastik Clinic?",
+  },
+  {
+    icon: CalendarCheckIcon,
+    title: "Book an appointment",
+    description: "How to schedule a visit",
+    prompt: "How can I book an appointment?",
+  },
+] as const;
 
 const ThreadSuggestions: FC = () => {
   return (
-    <div className="aui-thread-welcome-suggestions flex w-full flex-wrap items-center justify-center gap-2 px-4">
-      <ThreadPrimitive.Suggestions>
-        {() => <ThreadSuggestionItem />}
-      </ThreadPrimitive.Suggestions>
-    </div>
-  );
-};
-
-const ThreadSuggestionItem: FC = () => {
-  return (
-    <div className="aui-thread-welcome-suggestion-display fade-in slide-in-from-bottom-2 animate-in fill-mode-both duration-200">
-      <SuggestionPrimitive.Trigger send render={<Button variant="ghost" className="aui-thread-welcome-suggestion text-foreground hover:bg-muted border-border/60 h-auto gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-normal whitespace-nowrap transition-colors" />}><SuggestionPrimitive.Title className="aui-thread-welcome-suggestion-text-1" /><SuggestionPrimitive.Description className="aui-thread-welcome-suggestion-text-2 empty:hidden" /></SuggestionPrimitive.Trigger>
+    <div className="aui-thread-welcome-suggestions grid w-full grid-cols-2 gap-2 sm:gap-2.5">
+      {STARTER_SUGGESTIONS.map(
+        ({ icon: Icon, title, description, prompt }, idx) => (
+          <ThreadPrimitive.Suggestion
+            key={title}
+            prompt={prompt}
+            send
+            style={{ animationDelay: `${150 + idx * 50}ms` }}
+            className="aui-thread-welcome-suggestion group fade-in slide-in-from-bottom-2 animate-in fill-mode-both bg-card hover:border-primary/30 hover:shadow-soft focus-visible:ring-ring/40 flex items-center gap-3 sm:items-start rounded-2xl border p-3 text-start transition-[border-color,box-shadow,transform] duration-300 outline-none focus-visible:ring-3 active:scale-[0.98] sm:p-3.5"
+          >
+            <span className="bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors">
+              <Icon className="size-4" />
+            </span>
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-foreground text-[13px] leading-snug font-medium sm:text-sm">
+                {title}
+              </span>
+              <span className="text-muted-foreground hidden text-xs leading-snug sm:block">
+                {description}
+              </span>
+            </span>
+          </ThreadPrimitive.Suggestion>
+        ),
+      )}
     </div>
   );
 };
@@ -254,38 +307,48 @@ const ThreadSuggestionItem: FC = () => {
 const Composer: FC<{ autoFocus: boolean }> = ({ autoFocus }) => {
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
-      <ComposerPrimitive.AttachmentDropzone render={<div data-slot="aui_composer-shell" className="border-border/60 data-[dragging=true]:border-ring focus-within:border-border dark:border-muted-foreground/15 dark:focus-within:border-muted-foreground/30 flex w-full cursor-text flex-col gap-2 rounded-(--composer-radius) border bg-(--composer-bg) p-(--composer-padding) transition-[border-color] data-[dragging=true]:border-dashed data-[dragging=true]:bg-[color-mix(in_oklab,var(--color-accent)_50%,var(--color-background))]" />}><ComposerAttachments /><ComposerPrimitive.Input
-                      placeholder="Send a message..."
-                      className="aui-composer-input caret-primary placeholder:text-muted-foreground/60 max-h-48 min-h-10 w-full resize-none bg-transparent px-2.5 py-1 text-base leading-6 outline-none"
-                      rows={1}
-                      autoFocus={autoFocus}
-                      enterKeyHint="send"
-                      aria-label="Message input"
-                    /><ComposerAction /></ComposerPrimitive.AttachmentDropzone>
+      <ComposerPrimitive.AttachmentDropzone
+        render={
+          <div
+            data-slot="aui_composer-shell"
+            className="shadow-elevated focus-within:border-primary/40 focus-within:ring-primary/10 data-[dragging=true]:border-ring dark:border-muted-foreground/15 dark:focus-within:border-muted-foreground/30 flex w-full cursor-text flex-col gap-1 rounded-(--composer-radius) border bg-(--composer-bg) p-(--composer-padding) ring-4 ring-transparent transition-[border-color,box-shadow] duration-200 data-[dragging=true]:border-dashed data-[dragging=true]:bg-[color-mix(in_oklab,var(--color-accent)_50%,var(--color-background))]"
+          />
+        }
+      >
+        <ComposerAttachments />
+        <div className="flex items-end gap-2">
+          <ComposerPrimitive.Input
+            placeholder="Ask about doctors, timings, fees…"
+            className="aui-composer-input caret-primary placeholder:text-muted-foreground/70 max-h-40 min-h-11 flex-1 resize-none bg-transparent px-3.5 py-2.5 text-base leading-6 outline-none"
+            rows={1}
+            autoFocus={autoFocus}
+            enterKeyHint="send"
+            aria-label="Message input"
+          />
+          <ComposerAction />
+        </div>
+      </ComposerPrimitive.AttachmentDropzone>
     </ComposerPrimitive.Root>
   );
 };
 
 const ComposerAction: FC = () => {
   return (
-    <div className="aui-composer-action-wrapper relative flex items-center justify-between">
-      <ComposerAddAttachment />
-      <div className="flex items-center gap-1.5">
-        <AuiIf condition={(s) => s.thread.capabilities.dictation}>
-          <AuiIf condition={(s) => s.composer.dictation == null}>
-            <ComposerPrimitive.Dictate render={<TooltipIconButton tooltip="Voice input" side="bottom" type="button" variant="ghost" size="icon" className="aui-composer-dictate text-muted-foreground hover:text-foreground size-7 rounded-full" aria-label="Start voice input" />}><MicIcon className="aui-composer-dictate-icon size-4" /></ComposerPrimitive.Dictate>
-          </AuiIf>
-          <AuiIf condition={(s) => s.composer.dictation != null}>
-            <ComposerPrimitive.StopDictation render={<TooltipIconButton tooltip="Stop dictation" side="bottom" type="button" variant="ghost" size="icon" className="aui-composer-stop-dictation text-destructive size-7 rounded-full" aria-label="Stop voice input" />}><SquareIcon className="aui-composer-stop-dictation-icon size-3.5 animate-pulse fill-current" /></ComposerPrimitive.StopDictation>
-          </AuiIf>
+    <div className="aui-composer-action-wrapper relative flex shrink-0 items-center gap-1 pb-0.5 pe-0.5">
+      <AuiIf condition={(s) => s.thread.capabilities.dictation}>
+        <AuiIf condition={(s) => s.composer.dictation == null}>
+          <ComposerPrimitive.Dictate render={<TooltipIconButton tooltip="Voice input" side="top" type="button" variant="ghost" size="icon" className="aui-composer-dictate text-muted-foreground hover:text-foreground size-10 rounded-full" aria-label="Start voice input" />}><MicIcon className="aui-composer-dictate-icon size-5" /></ComposerPrimitive.Dictate>
         </AuiIf>
-        <AuiIf condition={(s) => !s.thread.isRunning}>
-          <ComposerPrimitive.Send render={<TooltipIconButton tooltip="Send message" side="bottom" type="button" variant="default" size="icon" className="aui-composer-send size-7 rounded-full" aria-label="Send message" />}><ArrowUpIcon className="aui-composer-send-icon size-4" /></ComposerPrimitive.Send>
+        <AuiIf condition={(s) => s.composer.dictation != null}>
+          <ComposerPrimitive.StopDictation render={<TooltipIconButton tooltip="Stop dictation" side="top" type="button" variant="ghost" size="icon" className="aui-composer-stop-dictation text-destructive size-10 rounded-full" aria-label="Stop voice input" />}><SquareIcon className="aui-composer-stop-dictation-icon size-4 animate-pulse fill-current" /></ComposerPrimitive.StopDictation>
         </AuiIf>
-        <AuiIf condition={(s) => s.thread.isRunning}>
-          <ComposerPrimitive.Cancel render={<Button type="button" variant="default" size="icon" className="aui-composer-cancel size-7 rounded-full" aria-label="Stop generating" />}><SquareIcon className="aui-composer-cancel-icon size-3.5 fill-current" /></ComposerPrimitive.Cancel>
-        </AuiIf>
-      </div>
+      </AuiIf>
+      <AuiIf condition={(s) => !s.thread.isRunning}>
+        <ComposerPrimitive.Send render={<TooltipIconButton tooltip="Send message" side="top" type="button" variant="default" size="icon" className="aui-composer-send size-10 rounded-full shadow-sm disabled:opacity-35 [&_svg]:size-5" aria-label="Send message" />}><ArrowUpIcon className="aui-composer-send-icon" /></ComposerPrimitive.Send>
+      </AuiIf>
+      <AuiIf condition={(s) => s.thread.isRunning}>
+        <ComposerPrimitive.Cancel render={<Button type="button" variant="default" size="icon" className="aui-composer-cancel size-10 rounded-full shadow-sm" aria-label="Stop generating" />}><SquareIcon className="aui-composer-cancel-icon size-3.5 fill-current" /></ComposerPrimitive.Cancel>
+      </AuiIf>
     </div>
   );
 };
@@ -293,7 +356,7 @@ const ComposerAction: FC = () => {
 const MessageError: FC = () => {
   return (
     <MessagePrimitive.Error>
-      <ErrorPrimitive.Root className="aui-message-error-root border-destructive bg-destructive/10 text-destructive dark:bg-destructive/5 mt-2 rounded-md border p-3 text-sm dark:text-red-200">
+      <ErrorPrimitive.Root className="aui-message-error-root border-destructive/30 bg-destructive/5 text-destructive dark:bg-destructive/5 mt-3 rounded-xl border px-3.5 py-2.5 text-sm dark:text-red-200">
         <ErrorPrimitive.Message className="aui-message-error-message line-clamp-2" />
       </ErrorPrimitive.Root>
     </MessagePrimitive.Error>
@@ -315,11 +378,13 @@ const AssistantMessage: FC = () => {
     <MessagePrimitive.Root
       data-slot="aui_assistant-message-root"
       data-role="assistant"
-      className="fade-in slide-in-from-bottom-1 animate-in relative -mb-7.5 pb-7.5 duration-150 [contain-intrinsic-size:auto_200px] [content-visibility:auto]"
+      className="fade-in slide-in-from-bottom-1 animate-in relative -mb-7.5 flex gap-3 pb-7.5 duration-200 [contain-intrinsic-size:auto_200px] [content-visibility:auto]"
     >
+      <BrandMark className="mt-0.5 size-7 rounded-lg sm:size-8" />
+      <div className="flex min-w-0 flex-1 flex-col">
       <div
         data-slot="aui_assistant-message-content"
-        className="text-foreground px-2 leading-relaxed wrap-break-word"
+        className="text-foreground pt-0.5 text-[15px] leading-relaxed wrap-break-word sm:pt-1"
       >
         <MessagePrimitive.GroupedParts
           groupBy={groupPartByType({
@@ -385,10 +450,13 @@ const AssistantMessage: FC = () => {
                 return (
                   <span
                     data-slot="aui_assistant-message-indicator"
-                    className="animate-pulse font-sans"
+                    role="status"
+                    className="inline-flex h-6 items-center gap-1"
                     aria-label="Assistant is working"
                   >
-                    {"●"}
+                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.3s] motion-reduce:animate-pulse" />
+                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.15s] motion-reduce:animate-pulse" />
+                    <span className="bg-primary/60 size-1.5 animate-bounce rounded-full motion-reduce:animate-pulse" />
                   </span>
                 );
               default:
@@ -401,10 +469,11 @@ const AssistantMessage: FC = () => {
 
       <div
         data-slot="aui_assistant-message-footer"
-        className={cn("ms-2 flex items-center", ACTION_BAR_HEIGHT)}
+        className={cn("flex items-center", ACTION_BAR_HEIGHT)}
       >
         <BranchPicker />
         <AssistantActionBar />
+      </div>
       </div>
     </MessagePrimitive.Root>
   );
@@ -415,7 +484,7 @@ const AssistantActionBar: FC = () => {
     <ActionBarPrimitive.Root
       hideWhenRunning
       autohide="not-last"
-      className="aui-assistant-action-bar-root text-muted-foreground animate-in fade-in col-start-3 row-start-2 -ms-1 flex gap-1 duration-200"
+      className="aui-assistant-action-bar-root text-muted-foreground animate-in fade-in col-start-3 row-start-2 -ms-1.5 flex gap-0.5 duration-200 [&_.aui-button-icon]:size-8 [&_.aui-button-icon]:p-1.5 sm:[&_.aui-button-icon]:size-7"
     >
       <ActionBarPrimitive.Copy render={<TooltipIconButton tooltip="Copy" />}><AuiIf condition={(s) => s.message.isCopied}>
                       <CheckIcon className="animate-in zoom-in-50 fade-in duration-200 ease-out" />
@@ -429,7 +498,7 @@ const AssistantActionBar: FC = () => {
           side="bottom"
           align="start"
           sideOffset={6}
-          className="aui-action-bar-more-content bg-popover text-popover-foreground data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:animate-out data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] overflow-hidden rounded-xl border p-1.5"
+          className="aui-action-bar-more-content shadow-elevated bg-popover text-popover-foreground data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:animate-out data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] overflow-hidden rounded-xl border p-1.5"
         >
           <ActionBarPrimitive.ExportMarkdown render={<ActionBarMorePrimitive.Item className="aui-action-bar-more-item hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm outline-none select-none" />}><DownloadIcon className="size-4" />Export as Markdown
                               </ActionBarPrimitive.ExportMarkdown>
@@ -455,13 +524,13 @@ const UserMessage: FC = () => {
   return (
     <MessagePrimitive.Root
       data-slot="aui_user-message-root"
-      className="fade-in slide-in-from-bottom-1 animate-in grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 duration-150 [contain-intrinsic-size:auto_200px] [content-visibility:auto] [&:where(>*)]:col-start-2"
+      className="fade-in slide-in-from-bottom-1 animate-in grid auto-rows-auto grid-cols-[minmax(48px,1fr)_auto] content-start gap-y-2 duration-200 [contain-intrinsic-size:auto_200px] [content-visibility:auto] [&:where(>*)]:col-start-2"
       data-role="user"
     >
       <UserMessageAttachments />
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
-        <div className="aui-user-message-content peer bg-muted text-foreground rounded-xl px-4 py-2 wrap-break-word empty:hidden">
+        <div className="aui-user-message-content peer bg-primary text-primary-foreground shadow-soft rounded-[1.25rem] rounded-ee-md px-4 py-2.5 text-[15px] leading-relaxed wrap-break-word whitespace-pre-wrap empty:hidden">
           <MessagePrimitive.Parts
             components={{ File: UserFilePart, Image: UserImagePart }}
           />
@@ -495,9 +564,9 @@ const EditComposer: FC = () => {
   return (
     <MessagePrimitive.Root
       data-slot="aui_edit-composer-wrapper"
-      className="flex flex-col px-2 [contain-intrinsic-size:auto_200px] [content-visibility:auto]"
+      className="flex flex-col [contain-intrinsic-size:auto_200px] [content-visibility:auto]"
     >
-      <ComposerPrimitive.Root className="aui-edit-composer-root border-border/60 dark:border-muted-foreground/15 ms-auto flex w-full max-w-[85%] cursor-text flex-col rounded-(--composer-radius) border bg-(--composer-bg)">
+      <ComposerPrimitive.Root className="aui-edit-composer-root shadow-soft focus-within:border-primary/40 dark:border-muted-foreground/15 ms-auto flex w-full max-w-[90%] cursor-text flex-col rounded-[1.25rem] border bg-(--composer-bg) transition-colors sm:max-w-[85%]">
         <ComposerPrimitive.Input
           className="aui-edit-composer-input text-foreground min-h-14 w-full resize-none bg-transparent px-4 pt-3 pb-1 text-base outline-none"
           autoFocus
