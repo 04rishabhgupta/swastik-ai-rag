@@ -14,7 +14,7 @@ export function SiteHeader() {
         <BrandMark className="sm:size-10" />
         <div className="flex min-w-0 flex-1 flex-col">
           <h1 className="text-foreground truncate text-[15px] leading-tight font-semibold sm:text-base">
-            Swastik Clinic Assistant
+            Swastik Medical Centre
           </h1>
           <p className="text-muted-foreground mt-0.5 flex items-center gap-1.5 truncate text-xs">
             <span className="relative flex size-2 shrink-0">

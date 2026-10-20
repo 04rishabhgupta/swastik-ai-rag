@@ -23,10 +23,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Swastik Clinic Assistant",
+  title: "Swastik Medical Centre",
   description:
     "AI assistant for Swastik Medical Centre, Vasundhara, Ghaziabad. Ask about doctors, OPD timings, consultation fees and appointments.",
-  applicationName: "Swastik Clinic Assistant",
+  applicationName: "Swastik Medical Centre",
   appleWebApp: { title: "Swastik Clinic", statusBarStyle: "default" },
   formatDetection: { telephone: false },
 };
